@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fullstackdemo.employee.entity.EmployeeEntity;
@@ -14,8 +13,8 @@ import com.fullstackdemo.employee.repository.EmployeeRepository;
 @Service
 public class EmployeeServiceImpl implements EmployeeService{
 
-	//@Autowired
-	private EmployeeRepository employeeRepository;
+	
+	private final EmployeeRepository employeeRepository;
 	
 	
 	public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
@@ -57,7 +56,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 
 	@Override
 	public boolean deletEmployee(Long id) {
-		EmployeeEntity employee = employeeRepository.findById(id).get();
+		EmployeeEntity employee = employeeRepository.findById(id).orElseThrow(
+			() -> new RuntimeException("Employee Not Found")
+		);
 		employeeRepository.delete(employee);
 		
 		return true;
